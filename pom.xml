@@ -15,6 +15,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.lib.path>${project.basedir}/lib</project.lib.path>
         <project.tools.path>${project.basedir}/tools</project.tools.path>
+        <assertj.assertions.target.dir>src/test/assertions</assertj.assertions.target.dir>
 
         <!-- sample version -->
         <sample-common-util.version>0.0.1-SNAPSHOT</sample-common-util.version>
@@ -155,12 +156,13 @@
                 <version>${mockito.version}</version>
             </dependency>
 
+            <!-- cdi-unit -->
             <dependency>
                 <groupId>org.jglue.cdi-unit</groupId>
                 <artifactId>cdi-unit</artifactId>
                 <version>${cdi-unit.version}</version>
             </dependency>
-            <!-- for cdi-unit (CDI 1.2 is 2.2 ～ 2.X) -->
+            <!-- CDI 1.2 is 2.2 ～ 2.X -->
             <dependency>
                 <groupId>org.jboss.weld.se</groupId>
                 <artifactId>weld-se-core</artifactId>
@@ -272,7 +274,8 @@
                                     </copy>
                                     <echo>Copying key resources</echo>
                                     <mkdir dir="${project.build.directory}/liberty/wlp/usr/servers/ArquillianManagedServer/resources/security" />
-                                    <copy todir="${project.build.directory}/liberty/wlp/usr/servers/ArquillianManagedServer/resources/security" overwrite="false">
+                                    <copy todir="${project.build.directory}/liberty/wlp/usr/servers/ArquillianManagedServer/resources/security"
+                                        overwrite="false">
                                         <fileset dir="${project.tools.path}/was-liberty/resources/security">
                                             <include name="**.*" />
                                         </fileset>
@@ -329,7 +332,7 @@
                         </execution>
                     </executions>
                     <configuration>
-                        <targetDir>${project.basedir}/src/test/assertions</targetDir>
+                        <targetDir>${assertj.assertions.target.dir}</targetDir>
                         <cleanTargetDir>true</cleanTargetDir>
                         <excludes>
                             <param>.*Abstract.*</param>
