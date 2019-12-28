@@ -19,7 +19,10 @@
 
         <!-- sample version -->
         <sample-common-util.version>0.0.1-SNAPSHOT</sample-common-util.version>
+        <sample-framework-core.version>0.0.1-SNAPSHOT</sample-framework-core.version>
+        <sample-framework-rest.version>0.0.1-SNAPSHOT</sample-framework-rest.version>
         <sample-test-util.version>0.0.1-SNAPSHOT</sample-test-util.version>
+        <sample-web-test-util.version>0.0.1-SNAPSHOT</sample-web-test-util.version>
 
         <!-- oss version -->
         <javaee.version>7.0</javaee.version>
@@ -77,6 +80,16 @@
                 <groupId>jp.co.sample</groupId>
                 <artifactId>sample-common-util-jar</artifactId>
                 <version>${sample-common-util.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jp.co.sample</groupId>
+                <artifactId>sample-framework-core-jar</artifactId>
+                <version>${sample-framework-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jp.co.sample</groupId>
+                <artifactId>sample-framework-rest-jar</artifactId>
+                <version>${sample-framework-rest.version}</version>
             </dependency>
 
             <!-- OSS Library -->
@@ -136,6 +149,11 @@
                 <groupId>jp.co.sample</groupId>
                 <artifactId>sample-test-util-jar</artifactId>
                 <version>${sample-test-util.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jp.co.sample</groupId>
+                <artifactId>sample-web-test-util-jar</artifactId>
+                <version>${sample-web-test-util.version}</version>
             </dependency>
 
             <dependency>
