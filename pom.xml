@@ -18,9 +18,10 @@
         <assertj.assertions.target.dir>src/test/assertions</assertj.assertions.target.dir>
 
         <!-- sample version -->
-        <sample-common-util.version>0.0.1-SNAPSHOT</sample-common-util.version>
         <sample-framework-core.version>0.0.1-SNAPSHOT</sample-framework-core.version>
         <sample-framework-rest.version>0.0.1-SNAPSHOT</sample-framework-rest.version>
+        <sample-framework-jsf.version>0.0.1-SNAPSHOT</sample-framework-jsf.version>
+        <sample-common-util.version>0.0.1-SNAPSHOT</sample-common-util.version>
         <sample-test-util.version>0.0.1-SNAPSHOT</sample-test-util.version>
         <sample-web-test-util.version>0.0.1-SNAPSHOT</sample-web-test-util.version>
 
@@ -60,6 +61,9 @@
         <maven-failsafe-plugin.version>3.0.0-M3</maven-failsafe-plugin.version>
         <liberty-maven-plugin.version>2.6.4</liberty-maven-plugin.version>
         <assertj-assertions-generator.version>2.2.0</assertj-assertions-generator.version>
+        <jsdoc3-maven-plugin.version>1.2.0</jsdoc3-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
+        <yuicompressor-maven-plugin.version>1.5.1</yuicompressor-maven-plugin.version>
 
         <!-- test settings -->
         <test.server.http.port>9080</test.server.http.port>
@@ -90,6 +94,11 @@
                 <groupId>jp.co.sample</groupId>
                 <artifactId>sample-framework-rest-jar</artifactId>
                 <version>${sample-framework-rest.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jp.co.sample</groupId>
+                <artifactId>sample-framework-jsf-jar</artifactId>
+                <version>${sample-framework-jsf.version}</version>
             </dependency>
 
             <!-- OSS Library -->
@@ -467,6 +476,38 @@
                             </goals>
                         </execution>
                     </executions>
+                </plugin>
+
+                <!-- Report -->
+                <plugin>
+                    <groupId>com.phasebash.jsdoc</groupId>
+                    <artifactId>jsdoc3-maven-plugin</artifactId>
+                    <version>${jsdoc3-maven-plugin.version}</version>
+                    <configuration>
+                        <recursive>true</recursive>
+                        <directoryRoots>
+                            <directoryRoot>${basedir}/src/main/webapp/resources/js</directoryRoot>
+                        </directoryRoots>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco-maven-plugin.version}</version>
+                </plugin>
+
+                <!-- JS/CSS minfy -->
+                <plugin>
+                    <groupId>net.alchim31.maven</groupId>
+                    <artifactId>yuicompressor-maven-plugin</artifactId>
+                    <version>${yuicompressor-maven-plugin.version}</version>
+                    <configuration>
+                        <gzip>true</gzip>
+                        <excludes>
+                            <exclude>**/*.min.js</exclude>
+                            <exclude>**/*.min.css</exclude>
+                        </excludes>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
