@@ -32,6 +32,7 @@
         <jackson.version>2.9.8</jackson.version>
         <commons-lang3.version>3.8.1</commons-lang3.version>
         <commons-beanutils.version>1.9.3</commons-beanutils.version>
+        <google-guava.version>28.1-jre</google-guava.version>
         <logback.version>1.2.3</logback.version>
         <lombok.version>1.18.6</lombok.version>
         <apache-poi.version>4.1.0</apache-poi.version>
@@ -49,6 +50,9 @@
         <cdi-unit.version>4.1.0</cdi-unit.version>
         <weld.version>2.4.8.Final</weld.version>
         <eclipselink.version>2.6.6</eclipselink.version>
+
+        <!-- oss version (test automation) -->
+        <selenide.version>5.6.0</selenide.version>
 
         <!-- plugin version -->
         <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
@@ -118,6 +122,11 @@
                 <groupId>commons-beanutils</groupId>
                 <artifactId>commons-beanutils</artifactId>
                 <version>${commons-beanutils.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${google-guava.version}</version>
             </dependency>
             <dependency>
                 <groupId>ch.qos.logback</groupId>
@@ -232,6 +241,13 @@
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-rs-extension-providers</artifactId>
                 <version>${apache-cxf.version}</version>
+            </dependency>
+
+            <!-- Selenide -->
+            <dependency>
+                <groupId>com.codeborne</groupId>
+                <artifactId>selenide</artifactId>
+                <version>${selenide.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
