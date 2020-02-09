@@ -15,6 +15,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.lib.path>${project.basedir}/lib</project.lib.path>
         <project.tools.path>${project.basedir}/tools</project.tools.path>
+        <project.report.config.path>${project.basedir}/../eclipse-settings</project.report.config.path>
         <assertj.assertions.target.dir>src/test/assertions</assertj.assertions.target.dir>
 
         <!-- sample version -->
@@ -66,9 +67,18 @@
         <maven-failsafe-plugin.version>3.0.0-M3</maven-failsafe-plugin.version>
         <liberty-maven-plugin.version>2.6.4</liberty-maven-plugin.version>
         <assertj-assertions-generator.version>2.2.0</assertj-assertions-generator.version>
+        <yuicompressor-maven-plugin.version>1.5.1</yuicompressor-maven-plugin.version>
+
+        <!-- report plugin version -->
+        <maven-site-plugin.version>3.8.2</maven-site-plugin.version>
+        <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
+        <maven-checkstyle-plugin.version>3.1.0</maven-checkstyle-plugin.version>
+        <maven-project-info-reports-plugin.version>3.0.0</maven-project-info-reports-plugin.version>
+        <maven-surefire-report-plugin.version>3.0.0-M4</maven-surefire-report-plugin.version>
+        <spotbugs-maven-plugin.version>3.1.12.2</spotbugs-maven-plugin.version>
+        <spotbugs.version>4.0.0-RC1</spotbugs.version>
         <jsdoc3-maven-plugin.version>1.2.0</jsdoc3-maven-plugin.version>
         <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
-        <yuicompressor-maven-plugin.version>1.5.1</yuicompressor-maven-plugin.version>
 
         <!-- test settings -->
         <test.server.http.port>9080</test.server.http.port>
@@ -502,6 +512,57 @@
 
                 <!-- Report -->
                 <plugin>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>${maven-site-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven-javadoc-plugin.version}</version>
+                    <configuration>
+                        <failOnError>false</failOnError>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>attach-javadoc</id>
+                            <phase>deploy</phase>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${maven-checkstyle-plugin.version}</version>
+                    <configuration>
+                        <configLocation>${project.report.config.path}/check-style/my_checks.xml</configLocation>
+                        <suppressionsLocation>${project.report.config.path}/check-style/my_checks__resources_suppressions.xml</suppressionsLocation>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.spotbugs</groupId>
+                    <artifactId>spotbugs-maven-plugin</artifactId>
+                    <version>${spotbugs-maven-plugin.version}</version>
+                    <configuration>
+                        <effort>Max</effort>
+                        <threshold>Low</threshold>
+                        <failOnError>false</failOnError>
+                    </configuration>
+                    <dependencies>
+                        <!-- overwrite dependency on spotbugs -->
+                        <dependency>
+                            <groupId>com.github.spotbugs</groupId>
+                            <artifactId>spotbugs</artifactId>
+                            <version>${spotbugs.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>${maven-project-info-reports-plugin.version}</version>
+                </plugin>
+                <!-- XXX An error has occurred and it cannot be used -->
+                <plugin>
                     <groupId>com.phasebash.jsdoc</groupId>
                     <artifactId>jsdoc3-maven-plugin</artifactId>
                     <version>${jsdoc3-maven-plugin.version}</version>
@@ -513,16 +574,30 @@
                     </configuration>
                 </plugin>
                 <plugin>
+                    <artifactId>maven-surefire-report-plugin</artifactId>
+                    <version>${maven-surefire-report-plugin.version}</version>
+                </plugin>
+                <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>${jacoco-maven-plugin.version}</version>
                 </plugin>
 
                 <!-- JS/CSS minfy -->
+                <!-- XXX Unavailable due to JavaScript syntax [let] -->
                 <plugin>
                     <groupId>net.alchim31.maven</groupId>
                     <artifactId>yuicompressor-maven-plugin</artifactId>
                     <version>${yuicompressor-maven-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>compressyui</id>
+                            <phase>process-resources</phase>
+                            <goals>
+                                <goal>compress</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                     <configuration>
                         <gzip>true</gzip>
                         <excludes>
@@ -534,4 +609,26 @@
             </plugins>
         </pluginManagement>
     </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </reporting>
 </project>
