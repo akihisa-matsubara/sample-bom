@@ -80,9 +80,13 @@
         <jsdoc3-maven-plugin.version>1.2.0</jsdoc3-maven-plugin.version>
         <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
 
-        <!-- test settings -->
+        <!-- test server settings -->
         <test.server.http.port>9080</test.server.http.port>
         <test.server.https.port>9443</test.server.https.port>
+        <runtime>wlp</runtime>
+        <runtimeGroupId>com.ibm.websphere.appserver.runtime</runtimeGroupId>
+        <runtimeArtifactId>wlp-javaee7</runtimeArtifactId>
+        <runtimeVersion>${was-liberty.version}</runtimeVersion>
     </properties>
 
     <dependencyManagement>
@@ -411,26 +415,32 @@
                     <groupId>net.wasdev.wlp.maven.plugins</groupId>
                     <artifactId>liberty-maven-plugin</artifactId>
                     <version>${liberty-maven-plugin.version}</version>
+                    <extensions>true</extensions>
                     <configuration>
                         <assemblyArtifact>
-                            <groupId>com.ibm.websphere.appserver.runtime</groupId>
-                            <artifactId>wlp-javaee7</artifactId>
-                            <version>${was-liberty.version}</version>
+                            <groupId>${runtimeGroupId}</groupId>
+                            <artifactId>${runtimeArtifactId}</artifactId>
+                            <version>${runtimeVersion}</version>
                             <type>zip</type>
                         </assemblyArtifact>
-                        <serverName>ArquillianManagedServer</serverName>
-                        <wlpHome>${project.build.directory}/liberty/wlp/</wlpHome>
-                        <configFile>src/test/resources/was-liberty/server.xml</configFile>
-                        <jvmOptionsFile>${project.tools.path}/was-liberty/jvm.options</jvmOptionsFile>
-                        <serverEnv>${project.tools.path}/was-liberty/server.env</serverEnv>
+                        <skipTestServer>true</skipTestServer>
+                        <skipLibertyPackage>true</skipLibertyPackage>
+
+                        <!-- Common Server Parameter -->
                         <bootstrapProperties>
                             <default.http.port>${test.server.http.port}</default.http.port>
                             <default.https.port>${test.server.https.port}</default.https.port>
                         </bootstrapProperties>
-                        <looseApplication>true</looseApplication>
-                        <installAppPackages>project</installAppPackages>
-                        <skipTestServer>true</skipTestServer>
-                        <skipLibertyPackage>true</skipLibertyPackage>
+                        <jvmOptionsFile>src/test/resources/was-liberty/jvm.options</jvmOptionsFile>
+                        <configFile>src/test/resources/was-liberty/server.xml</configFile>
+                        <serverEnv>${project.tools.path}/was-liberty/server.env</serverEnv>
+
+                        <!-- Container Configuration (arquillian.xml) -->
+                        <serverName>ArquillianManagedServer</serverName>
+                        <wlpHome>${project.build.directory}/liberty/wlp/</wlpHome>
+                        <arquillianProperties>
+                            <verifyApps>${project.artifactId}</verifyApps>
+                        </arquillianProperties>
                     </configuration>
                     <executions>
                         <execution>
@@ -444,19 +454,9 @@
                             <id>create-server</id>
                             <phase>prepare-package</phase>
                             <goals>
-                                <goal>install-server</goal>
                                 <goal>create-server</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>install-feature</id>
-                            <phase>prepare-package</phase>
-                            <goals>
                                 <goal>install-feature</goal>
                             </goals>
-                            <configuration>
-                                <outputDirectory>${project.build.directory}/liberty-alt-output-dir</outputDirectory>
-                            </configuration>
                         </execution>
                         <execution>
                             <id>install-apps</id>
@@ -465,25 +465,9 @@
                                 <goal>install-apps</goal>
                             </goals>
                             <configuration>
-                                <looseApplication>true</looseApplication>
                                 <stripVersion>true</stripVersion>
+                                <looseApplication>true</looseApplication>
                                 <installAppPackages>project</installAppPackages>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>package-server</id>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>package-server</goal>
-                            </goals>
-                            <configuration>
-                                <outputDirectory>${project.build.directory}/liberty-alt-output-dir</outputDirectory>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>package-app</id>
-                            <configuration>
-                                <outputDirectory>target/wlp-package</outputDirectory>
                             </configuration>
                         </execution>
                         <execution>
@@ -491,20 +475,6 @@
                             <phase>pre-integration-test</phase>
                             <goals>
                                 <goal>configure-arquillian</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>test-start-server</id>
-                            <phase>pre-integration-test</phase>
-                            <goals>
-                                <goal>test-start-server</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>test-stop-server</id>
-                            <phase>post-integration-test</phase>
-                            <goals>
-                                <goal>test-stop-server</goal>
                             </goals>
                         </execution>
                     </executions>
