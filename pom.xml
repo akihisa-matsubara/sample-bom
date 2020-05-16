@@ -65,7 +65,7 @@
         <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
         <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
         <maven-failsafe-plugin.version>3.0.0-M3</maven-failsafe-plugin.version>
-        <liberty-maven-plugin.version>2.6.4</liberty-maven-plugin.version>
+        <liberty-maven-plugin.version>3.2.1</liberty-maven-plugin.version>
         <assertj-assertions-generator.version>2.2.0</assertj-assertions-generator.version>
         <yuicompressor-maven-plugin.version>1.5.1</yuicompressor-maven-plugin.version>
 
@@ -412,17 +412,17 @@
                     </dependencies>
                 </plugin>
                 <plugin>
-                    <groupId>net.wasdev.wlp.maven.plugins</groupId>
+                    <groupId>io.openliberty.tools</groupId>
                     <artifactId>liberty-maven-plugin</artifactId>
                     <version>${liberty-maven-plugin.version}</version>
                     <extensions>true</extensions>
                     <configuration>
-                        <assemblyArtifact>
+                        <runtimeArtifact>
                             <groupId>${runtimeGroupId}</groupId>
                             <artifactId>${runtimeArtifactId}</artifactId>
                             <version>${runtimeVersion}</version>
                             <type>zip</type>
-                        </assemblyArtifact>
+                        </runtimeArtifact>
                         <skipTestServer>true</skipTestServer>
                         <skipLibertyPackage>true</skipLibertyPackage>
 
@@ -432,8 +432,8 @@
                             <default.https.port>${test.server.https.port}</default.https.port>
                         </bootstrapProperties>
                         <jvmOptionsFile>src/test/resources/was-liberty/jvm.options</jvmOptionsFile>
-                        <configFile>src/test/resources/was-liberty/server.xml</configFile>
-                        <serverEnv>${project.tools.path}/was-liberty/server.env</serverEnv>
+                        <serverXmlFile>src/test/resources/was-liberty/server.xml</serverXmlFile>
+                        <serverEnvFile>${project.tools.path}/was-liberty/server.env</serverEnvFile>
 
                         <!-- Container Configuration (arquillian.xml) -->
                         <serverName>ArquillianManagedServer</serverName>
@@ -447,27 +447,27 @@
                             <id>stop-server-before-clean</id>
                             <phase>pre-clean</phase>
                             <goals>
-                                <goal>stop-server</goal>
+                                <goal>stop</goal>
                             </goals>
                         </execution>
                         <execution>
-                            <id>create-server</id>
+                            <id>create</id>
                             <phase>prepare-package</phase>
                             <goals>
-                                <goal>create-server</goal>
+                                <goal>create</goal>
                                 <goal>install-feature</goal>
                             </goals>
                         </execution>
                         <execution>
-                            <id>install-apps</id>
+                            <id>deploy</id>
                             <phase>package</phase>
                             <goals>
-                                <goal>install-apps</goal>
+                                <goal>deploy</goal>
                             </goals>
                             <configuration>
                                 <stripVersion>true</stripVersion>
                                 <looseApplication>true</looseApplication>
-                                <installAppPackages>project</installAppPackages>
+                                <deployPackages>project</deployPackages>
                             </configuration>
                         </execution>
                         <execution>
