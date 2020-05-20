@@ -67,7 +67,6 @@
         <maven-failsafe-plugin.version>3.0.0-M3</maven-failsafe-plugin.version>
         <liberty-maven-plugin.version>3.2.1</liberty-maven-plugin.version>
         <assertj-assertions-generator.version>2.2.0</assertj-assertions-generator.version>
-        <yuicompressor-maven-plugin.version>1.5.1</yuicompressor-maven-plugin.version>
 
         <!-- report plugin version -->
         <maven-site-plugin.version>3.8.2</maven-site-plugin.version>
@@ -77,7 +76,6 @@
         <maven-surefire-report-plugin.version>3.0.0-M4</maven-surefire-report-plugin.version>
         <spotbugs-maven-plugin.version>3.1.12.2</spotbugs-maven-plugin.version>
         <spotbugs.version>4.0.0-RC1</spotbugs.version>
-        <jsdoc3-maven-plugin.version>1.2.0</jsdoc3-maven-plugin.version>
         <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
 
         <!-- test server settings -->
@@ -206,6 +204,7 @@
                 <artifactId>assertj-core</artifactId>
                 <version>${assertj.version}</version>
             </dependency>
+            <!-- NOTE: cdi-unit support mocking library. -->
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
@@ -531,18 +530,6 @@
                     <artifactId>maven-project-info-reports-plugin</artifactId>
                     <version>${maven-project-info-reports-plugin.version}</version>
                 </plugin>
-                <!-- XXX An error has occurred and it cannot be used -->
-                <plugin>
-                    <groupId>com.phasebash.jsdoc</groupId>
-                    <artifactId>jsdoc3-maven-plugin</artifactId>
-                    <version>${jsdoc3-maven-plugin.version}</version>
-                    <configuration>
-                        <recursive>true</recursive>
-                        <directoryRoots>
-                            <directoryRoot>${basedir}/src/main/webapp/resources/js</directoryRoot>
-                        </directoryRoots>
-                    </configuration>
-                </plugin>
                 <plugin>
                     <artifactId>maven-surefire-report-plugin</artifactId>
                     <version>${maven-surefire-report-plugin.version}</version>
@@ -551,30 +538,6 @@
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>${jacoco-maven-plugin.version}</version>
-                </plugin>
-
-                <!-- JS/CSS minfy -->
-                <!-- XXX Unavailable due to JavaScript syntax [let] -->
-                <plugin>
-                    <groupId>net.alchim31.maven</groupId>
-                    <artifactId>yuicompressor-maven-plugin</artifactId>
-                    <version>${yuicompressor-maven-plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <id>compressyui</id>
-                            <phase>process-resources</phase>
-                            <goals>
-                                <goal>compress</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                    <configuration>
-                        <gzip>true</gzip>
-                        <excludes>
-                            <exclude>**/*.min.js</exclude>
-                            <exclude>**/*.min.css</exclude>
-                        </excludes>
-                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
