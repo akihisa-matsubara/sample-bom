@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>dev.sample</groupId>
     <artifactId>sample-bom</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -18,13 +18,19 @@
         <project.report.config.path>${project.basedir}/../eclipse-settings</project.report.config.path>
         <assertj.assertions.target.dir>src/test/assertions</assertj.assertions.target.dir>
 
+        <!-- maven repository settings -->
+        <github.global.server>github</github.global.server>
+        <git.repositoryOwner>akihisa-matsubara</git.repositoryOwner>
+        <git.repositoryName>maven</git.repositoryName>
+        <git.branchName>mvn-repo</git.branchName>
+
         <!-- sample version -->
-        <sample-framework-core.version>0.0.1-SNAPSHOT</sample-framework-core.version>
-        <sample-framework-rest.version>0.0.1-SNAPSHOT</sample-framework-rest.version>
-        <sample-framework-jsf.version>0.0.1-SNAPSHOT</sample-framework-jsf.version>
-        <sample-common-util.version>0.0.1-SNAPSHOT</sample-common-util.version>
-        <sample-test-util.version>0.0.1-SNAPSHOT</sample-test-util.version>
-        <sample-web-test-util.version>0.0.1-SNAPSHOT</sample-web-test-util.version>
+        <sample-framework-core.version>1.0.0</sample-framework-core.version>
+        <sample-framework-rest.version>1.0.0</sample-framework-rest.version>
+        <sample-framework-jsf.version>1.0.0</sample-framework-jsf.version>
+        <sample-common-util.version>1.0.0</sample-common-util.version>
+        <sample-test-util.version>1.0.0</sample-test-util.version>
+        <sample-web-test-util.version>1.0.0</sample-web-test-util.version>
 
         <!-- oss version -->
         <javaee.version>7.0</javaee.version>
@@ -65,8 +71,10 @@
         <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
         <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
         <maven-failsafe-plugin.version>3.0.0-M3</maven-failsafe-plugin.version>
+        <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
         <liberty-maven-plugin.version>3.2.1</liberty-maven-plugin.version>
         <assertj-assertions-generator.version>2.2.0</assertj-assertions-generator.version>
+        <github-site-maven-plugin>0.12</github-site-maven-plugin>
 
         <!-- report plugin version -->
         <maven-site-plugin.version>3.8.2</maven-site-plugin.version>
@@ -86,6 +94,17 @@
         <runtimeArtifactId>wlp-javaee7</runtimeArtifactId>
         <runtimeVersion>${was-liberty.version}</runtimeVersion>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>github-maven</id>
+            <url>https://raw.github.com/${git.repositoryOwner}/${git.repositoryName}/${git.branchName}/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <dependencyManagement>
         <dependencies>
@@ -295,13 +314,28 @@
                     <artifactId>maven-war-plugin</artifactId>
                     <version>${maven-war-plugin.version}</version>
                     <configuration>
+                        <archive>
+                            <manifestEntries>
+                                <Build-Timestamp-UTC>${maven.build.timestamp}</Build-Timestamp-UTC>
+                            </manifestEntries>
+                        </archive>
                         <failOnMissingWebXml>false</failOnMissingWebXml>
-                        <packagingExcludes>pom.xml</packagingExcludes>
+                        <packagingExcludes>
+                            pom.xml,
+                            resources/sass/
+                        </packagingExcludes>
                     </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>${maven-jar-plugin.version}</version>
+                    <configuration>
+                        <archive>
+                            <manifestEntries>
+                                <Build-Timestamp-UTC>${maven.build.timestamp}</Build-Timestamp-UTC>
+                            </manifestEntries>
+                        </archive>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-dependency-plugin</artifactId>
@@ -539,8 +573,53 @@
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>${jacoco-maven-plugin.version}</version>
                 </plugin>
+
+                <!-- deploy -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>${maven-deploy-plugin.version}</version>
+                    <configuration>
+                        <altDeploymentRepository>internal.repo::default::file://${project.build.directory}/${git.branchName}</altDeploymentRepository>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.github</groupId>
+                    <artifactId>site-maven-plugin</artifactId>
+                    <version>${github-site-maven-plugin}</version>
+                    <configuration>
+                        <message>Maven artifacts for ${project.name}/${project.artifactId}/${project.version}</message>
+                        <noJekyll>true</noJekyll>
+                        <outputDirectory>${project.build.directory}/${git.branchName}</outputDirectory>
+                        <branch>refs/heads/${git.branchName}</branch>
+                        <includes>
+                            <include>**/*</include>
+                        </includes>
+                        <repositoryName>${git.repositoryName}</repositoryName>
+                        <repositoryOwner>${git.repositoryOwner}</repositoryOwner>
+                        <merge>true</merge>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>site</goal>
+                            </goals>
+                            <phase>deploy</phase>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
     </build>
 
     <reporting>
@@ -564,4 +643,5 @@
             </plugin>
         </plugins>
     </reporting>
+
 </project>
