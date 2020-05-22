@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>jp.co.sample</groupId>
+    <groupId>dev.sample</groupId>
     <artifactId>sample-bom</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -98,22 +98,22 @@
 
             <!-- Sample Library -->
             <dependency>
-                <groupId>jp.co.sample</groupId>
+                <groupId>dev.sample</groupId>
                 <artifactId>sample-common-util-jar</artifactId>
                 <version>${sample-common-util.version}</version>
             </dependency>
             <dependency>
-                <groupId>jp.co.sample</groupId>
+                <groupId>dev.sample</groupId>
                 <artifactId>sample-framework-core-jar</artifactId>
                 <version>${sample-framework-core.version}</version>
             </dependency>
             <dependency>
-                <groupId>jp.co.sample</groupId>
+                <groupId>dev.sample</groupId>
                 <artifactId>sample-framework-rest-jar</artifactId>
                 <version>${sample-framework-rest.version}</version>
             </dependency>
             <dependency>
-                <groupId>jp.co.sample</groupId>
+                <groupId>dev.sample</groupId>
                 <artifactId>sample-framework-jsf-jar</artifactId>
                 <version>${sample-framework-jsf.version}</version>
             </dependency>
@@ -182,12 +182,12 @@
 
             <!-- Test Library -->
             <dependency>
-                <groupId>jp.co.sample</groupId>
+                <groupId>dev.sample</groupId>
                 <artifactId>sample-test-util-jar</artifactId>
                 <version>${sample-test-util.version}</version>
             </dependency>
             <dependency>
-                <groupId>jp.co.sample</groupId>
+                <groupId>dev.sample</groupId>
                 <artifactId>sample-web-test-util-jar</artifactId>
                 <version>${sample-web-test-util.version}</version>
             </dependency>
@@ -312,7 +312,7 @@
                     <version>${maven-surefire-plugin.version}</version>
                     <configuration>
                         <excludes>
-                            <exclude>it/**/*.java</exclude>
+                            <exclude>uit/**/*.java</exclude>
                         </excludes>
                     </configuration>
                 </plugin>
@@ -359,7 +359,7 @@
                             </goals>
                             <configuration>
                                 <includes>
-                                    <include>**/it/**/*.java</include>
+                                    <include>**/uit/**/*.java</include>
                                 </includes>
                             </configuration>
                         </execution>
@@ -373,10 +373,10 @@
                     </executions>
                     <configuration>
                         <summaryFile>
-                            ${project.build.directory}/test-reports/it/failsafe-summary.xml
+                            ${project.build.directory}/test-reports/uit/failsafe-summary.xml
                         </summaryFile>
                         <reportsDirectory>
-                            ${project.build.directory}/test-reports/it
+                            ${project.build.directory}/test-reports/uit
                         </reportsDirectory>
                     </configuration>
                 </plugin>
