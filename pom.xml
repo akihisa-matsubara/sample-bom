@@ -15,7 +15,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.lib.path>${project.basedir}/lib</project.lib.path>
         <project.tools.path>${project.basedir}/tools</project.tools.path>
-        <project.report.config.path>${project.basedir}/../eclipse-settings</project.report.config.path>
         <assertj.assertions.target.dir>src/test/assertions</assertj.assertions.target.dir>
 
         <!-- maven repository settings -->
@@ -43,6 +42,7 @@
         <sample-common-util.version>1.0.0</sample-common-util.version>
         <sample-test-util.version>1.0.0</sample-test-util.version>
         <sample-web-test-util.version>1.0.0</sample-web-test-util.version>
+        <sample-online-jsf-test-driver.version>1.0.0</sample-online-jsf-test-driver.version>
 
         <!-- oss version -->
         <javaee.version>7.0</javaee.version>
@@ -80,18 +80,19 @@
         <maven-war-plugin.version>3.2.2</maven-war-plugin.version>
         <maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
         <maven-dependency-plugin.version>3.1.1</maven-dependency-plugin.version>
+        <formatter-maven-plugin.version>2.12.1</formatter-maven-plugin.version>
         <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
         <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
         <maven-failsafe-plugin.version>3.0.0-M3</maven-failsafe-plugin.version>
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
         <liberty-maven-plugin.version>3.2.1</liberty-maven-plugin.version>
         <assertj-assertions-generator.version>2.2.0</assertj-assertions-generator.version>
-        <github-site-maven-plugin>0.12</github-site-maven-plugin>
+        <github-site-maven-plugin.version>0.12</github-site-maven-plugin.version>
 
         <!-- report plugin version -->
         <maven-site-plugin.version>3.8.2</maven-site-plugin.version>
         <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
-        <maven-checkstyle-plugin.version>3.1.0</maven-checkstyle-plugin.version>
+        <maven-checkstyle-plugin.version>3.1.1</maven-checkstyle-plugin.version>
         <maven-project-info-reports-plugin.version>3.0.0</maven-project-info-reports-plugin.version>
         <maven-surefire-report-plugin.version>3.0.0-M4</maven-surefire-report-plugin.version>
         <spotbugs-maven-plugin.version>3.1.12.2</spotbugs-maven-plugin.version>
@@ -326,6 +327,7 @@
                         <packagingExcludes>
                             pom.xml,
                             resources/sass/
+                            resources/dummy-data/
                         </packagingExcludes>
                     </configuration>
                 </plugin>
@@ -343,6 +345,32 @@
                 <plugin>
                     <artifactId>maven-dependency-plugin</artifactId>
                     <version>${maven-dependency-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>net.revelc.code.formatter</groupId>
+                    <artifactId>formatter-maven-plugin</artifactId>
+                    <version>${formatter-maven-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>format</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <configFile>style-guide/eclipse-java-my-style.xml</configFile>
+                        <excludes>
+                            <exclude>**/assertj/*Assert.java</exclude>
+                            <exclude>**/*.xml</exclude>
+                        </excludes>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>dev.sample</groupId>
+                            <artifactId>sample-build-tools</artifactId>
+                            <version>${project.version}</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
@@ -541,9 +569,17 @@
                     <artifactId>maven-checkstyle-plugin</artifactId>
                     <version>${maven-checkstyle-plugin.version}</version>
                     <configuration>
-                        <configLocation>${project.report.config.path}/check-style/my_checks.xml</configLocation>
-                        <suppressionsLocation>${project.report.config.path}/check-style/my_checks__resources_suppressions.xml</suppressionsLocation>
+                        <configLocation>check-style/my_checks.xml</configLocation>
+                        <suppressionsLocation>check-style/my_checks__resources_suppressions.xml</suppressionsLocation>
+                        <suppressionsFileExpression>org.checkstyle.google.suppressionfilter.config</suppressionsFileExpression>
                     </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>dev.sample</groupId>
+                            <artifactId>sample-build-tools</artifactId>
+                            <version>${project.version}</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>com.github.spotbugs</groupId>
@@ -596,7 +632,7 @@
                 <plugin>
                     <groupId>com.github.github</groupId>
                     <artifactId>site-maven-plugin</artifactId>
-                    <version>${github-site-maven-plugin}</version>
+                    <version>${github-site-maven-plugin.version}</version>
                     <configuration>
                         <message>Maven artifacts for ${project.name}/${project.artifactId}/${project.version}</message>
                         <noJekyll>true</noJekyll>
@@ -630,7 +666,61 @@
                 <artifactId>site-maven-plugin</artifactId>
             </plugin>
         </plugins>
+
+        <!-- For environment-dependent settings. Configure the profiles on the application side. -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources-filter/env/${profile}/src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <!-- isolating property settings -->
+        <!-- <filters> -->
+        <!-- <filter>src/main/resources-filter/env/${profile}/filter-values.properties</filter> -->
+        <!-- </filters> -->
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
+            <testResource>
+                <directory>src/test/resources-filter/env/${profile}/src/test/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
+        </testResources>
     </build>
+
+    <!-- profiles template -->
+    <profiles>
+        <profile>
+            <id>ContinuousIntegration</id>
+            <properties>
+                <profile>01_ci</profile>
+            </properties>
+        </profile>
+        <profile>
+            <id>IntegrationTest</id>
+            <properties>
+                <profile>02_it</profile>
+            </properties>
+        </profile>
+        <profile>
+            <id>SystemTest</id>
+            <properties>
+                <profile>03_st</profile>
+            </properties>
+        </profile>
+        <profile>
+            <id>Production</id>
+            <properties>
+                <profile>04_prod</profile>
+            </properties>
+        </profile>
+    </profiles>
 
     <reporting>
         <plugins>
@@ -647,6 +737,7 @@
             <plugin>
                 <artifactId>maven-surefire-report-plugin</artifactId>
             </plugin>
+            <!-- NOTE: not yet confirmed -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
