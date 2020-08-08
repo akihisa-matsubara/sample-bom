@@ -8,6 +8,10 @@
 
     <properties>
         <!-- common settings -->
+        <!-- NOTE: CDI-UNIT does not work in Java 11. Otherwise, it's OK. -->
+        <!-- java.io.IOException: cannot connect to jrt:/openj9.cuda -->
+        <!-- https://github.com/cdi-unit/cdi-unit/issues/182 -->
+        <!-- <java.version>11</java.version> -->
         <java.version>1.8</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -46,14 +50,14 @@
 
         <!-- oss version -->
         <javaee.version>7.0</javaee.version>
-        <was-liberty.version>18.0.0.3</was-liberty.version>
+        <was-liberty.version>20.0.0.6</was-liberty.version>
         <was-liberty-javaspecs.version>1.0</was-liberty-javaspecs.version>
         <jackson.version>2.9.8</jackson.version>
         <commons-lang3.version>3.8.1</commons-lang3.version>
         <commons-beanutils.version>1.9.3</commons-beanutils.version>
         <google-guava.version>28.1-jre</google-guava.version>
         <logback.version>1.2.3</logback.version>
-        <lombok.version>1.18.6</lombok.version>
+        <lombok.version>1.18.12</lombok.version>
         <typesafe-config.version>1.4.0</typesafe-config.version>
         <apache-poi.version>4.1.0</apache-poi.version>
 
