@@ -68,7 +68,7 @@
         <apache-cxf.version>3.3.1</apache-cxf.version>
         <jboss-javaee.version>1.1.1.Final</jboss-javaee.version>
         <junit-jupiter.version>5.3.2</junit-jupiter.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <assertj.version>3.11.1</assertj.version>
         <mockito.version>2.27.0</mockito.version>
         <cdi-unit.version>4.1.0</cdi-unit.version>
