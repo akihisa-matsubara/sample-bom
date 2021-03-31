@@ -55,7 +55,7 @@
         <jackson.version>2.9.8</jackson.version>
         <commons-lang3.version>3.8.1</commons-lang3.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
-        <google-guava.version>28.1-jre</google-guava.version>
+        <google-guava.version>29.0-jre</google-guava.version>
         <logback.version>1.2.3</logback.version>
         <lombok.version>1.18.12</lombok.version>
         <typesafe-config.version>1.4.0</typesafe-config.version>
