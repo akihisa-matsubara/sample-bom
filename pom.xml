@@ -59,7 +59,7 @@
         <logback.version>1.2.3</logback.version>
         <lombok.version>1.18.12</lombok.version>
         <typesafe-config.version>1.4.0</typesafe-config.version>
-        <apache-poi.version>4.1.0</apache-poi.version>
+        <apache-poi.version>4.1.1</apache-poi.version>
 
         <!-- oss version (test library) -->
         <arquillian.version>1.4.1.Final</arquillian.version>
